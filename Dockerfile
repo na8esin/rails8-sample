@@ -2,6 +2,11 @@ FROM ruby:3.4.4
 
 ENV HISTFILE=/usr/src/app/.bash_history
 
+# Install base packages
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl default-mysql-client libjemalloc2 libvips vim && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 RUN gem install bundler
 RUN gem install rails
 
