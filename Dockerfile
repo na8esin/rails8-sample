@@ -1,4 +1,8 @@
-FROM ruby:3.4.4
+# rails newをしたいためだけのDockerfile
+# でもこれを開発用で使ってもいいのかもしれない
+# src/Dockerfileを使うのは本番用なので
+
+FROM ruby:3.4.5
 
 ENV HISTFILE=/usr/src/app/.bash_history
 
