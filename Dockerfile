@@ -1,6 +1,6 @@
 # rails newをしたいためだけのDockerfile
 # でもこれを開発用で使ってもいいのかもしれない
-# src/Dockerfileを使うのは本番用なので
+# src/Dockerfileは本番用なので
 
 FROM ruby:3.4.5
 

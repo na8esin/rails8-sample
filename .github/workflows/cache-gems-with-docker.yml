@@ -1,0 +1,39 @@
+name: cache gems with docker
+
+"on":
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: cache gems with docker
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: cached gems
+      id: cache-gems
+      uses: actions/cache@v4
+      with:
+        path: |
+          ./src/vendor/bundle
+        key: ${{ runner.os }}-ruby3.4.5-gems-${{ hashFiles('src/Gemfile.lock') }}
+
+    - name: Build and cp bundle
+      env:
+        IMAGE_TAG: ${{ github.sha }}
+        BUNDLE_PATH: /usr/local/bundle
+      run: |
+        # Check if Dockerfile exists in backend directory
+        if [ ! -f "./src/Dockerfile" ]; then
+          echo "Warning: No Dockerfile found in ecs backend directory"
+          exit 1
+        fi
+
+        docker build -t example:$IMAGE_TAG --file ./src/Dockerfile ./src
+        containerId=`docker run -d example:$IMAGE_TAG`
+        docker cp $containerId:$BUNDLE_PATH ./src/vendor/
